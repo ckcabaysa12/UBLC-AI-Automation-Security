@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Inbox | UBLC Security</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .container { max-width: 900px; margin-top: 50px; }
+        /* Reuse dashboard status colors for consistency */
+        .status-badge { font-size: 0.9em; padding: 0.3em 0.6em; border-radius: 0.25rem; }
+        .bg-new { background-color: #e74a3b !important; color: white !important; }
+        .bg-in-progress { background-color: #f6c23e !important; color: black !important; }
+        .bg-resolved { background-color: #1cc88a !important; color: white !important; }
+        .bg-closed { background-color: #36b9cc !important; color: white !important; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="text-primary"><i class="fas fa-inbox"></i> My Incident Reports Inbox</h3>
+        <a href="{{ url_for('home') }}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back to Chat</a>
+    </div>
+
+    {% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
+
+    {% if not reports and not error %}
+    <div class="alert alert-info text-center">
+        You have not submitted any reports yet.
+    </div>
+    {% else %}
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr class="table-primary">
+                    <th>Report ID</th>
+                    <th>Incident Type</th>
+                    <th>Location</th>
+                    <th>Submitted</th>
+                    <th>Current Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for report in reports %}
+                <tr>
+                    <td><strong>{{ report.id }}</strong></td>
+                    <td>{{ report.incident_type }}</td>
+                    <td>{{ report.location }}</td>
+                    <td>{{ report.timestamp_str }}</td>
+                    <td>
+                        {% set status = report.status %}
+                        {% set status_class = {
+                            'New': 'bg-new',
+                            'In Progress': 'bg-in-progress',
+                            'Resolved': 'bg-resolved',
+                            'Closed': 'bg-closed'
+                        }[status] if status in ['New', 'In Progress', 'Resolved', 'Closed'] else 'bg-secondary' %}
+                        <span class="badge status-badge {{ status_class }}">{{ status }}</span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

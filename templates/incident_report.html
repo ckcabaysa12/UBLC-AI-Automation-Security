@@ -4,14 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UBLC Security Incident Report</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> 
     <style>
         :root {
-            --primary-color: #5D54F5;
+            --primary-color: #5D54F5; /* Main Blue/Purple */
             --secondary-color: #f0f0f0;
             --text-color: #333;
-            --header-color: #004d99;
-            --input-bg: #f7f7f7;
+            --header-color: #333; /* Darker header for contrast */
+            --light-text: #777;
+            --input-bg: #ffffff; /* Use white for cleaner input fields */
+            --border-color: #ddd;
+            --required-color: #dc3545; /* Red for required indicator */
         }
         body { 
             margin: 0; 
@@ -19,109 +23,180 @@
             justify-content: center; 
             align-items: center; 
             min-height: 100vh; 
-            background-color: var(--secondary-color);
+            background: linear-gradient(135deg, var(--secondary-color) 0%, #e6e6e6 100%);
             font-family: 'Roboto', sans-serif;
             color: var(--text-color);
         }
         .container { 
-            max-width: 600px; 
-            padding: 30px; 
+            max-width: 650px; /* Slightly wider container */
+            padding: 40px; 
             background-color: white; 
-            border-radius: 20px; 
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); 
+            border-radius: 25px; /* Softer edges */
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15); 
+            margin: 20px;
         }
-        h4 { 
+
+        /* --- Header and Instructions --- */
+        h2 { 
             color: var(--header-color); 
             font-weight: 700;
-            margin-bottom: 20px;
+            font-size: 1.8em;
+            margin-bottom: 5px;
             text-align: center;
         } 
-        p {
+        .form-description {
             text-align: center;
-            margin-bottom: 25px;
-            color: #777;
+            margin-bottom: 30px;
+            color: var(--light-text);
+            font-size: 0.95em;
         }
-        hr {
-            border: 0;
-            height: 1px;
-            background: #eee;
-            margin: 20px 0;
-        }
+
+        /* --- Form Elements --- */
         label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             font-weight: 500;
-            color: #555;
+            color: var(--text-color);
+            font-size: 0.9em;
         }
-        input[type="text"], input[type="email"], select, textarea, input[type="file"] {
+        .required::after {
+            content: '*';
+            color: var(--required-color);
+            margin-left: 4px;
+        }
+        input[type="text"], input[type="email"], select, textarea {
             width: 100%;
-            padding: 12px 15px;
-            margin-bottom: 20px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
+            padding: 14px 15px; /* Increased padding */
+            margin-bottom: 25px; /* Increased margin */
+            border: 1px solid var(--border-color);
+            border-radius: 10px; /* Softer input corners */
             background-color: var(--input-bg);
             box-sizing: border-box; 
+            transition: border-color 0.2s, box-shadow 0.2s;
+            font-size: 1em;
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(93, 84, 245, 0.1);
+            outline: none;
         }
         textarea {
             resize: vertical;
-            min-height: 100px;
+            min-height: 120px;
         }
-        /* Specific styling for file input to make it look nicer */
+
+        /* --- File Input Styling --- */
+        .file-upload-wrapper {
+            border: 2px dashed #ccc;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            background-color: #f9f9f9;
+            margin-bottom: 25px;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+        .file-upload-wrapper:hover {
+            border-color: var(--primary-color);
+        }
         input[type="file"] {
-            padding: 10px 15px;
-            background-color: #fff;
-            border: 1px dashed #ccc;
+            display: none; /* Hide default file input */
         }
+        .file-upload-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .file-upload-label i {
+            margin-right: 10px;
+        }
+        
+        /* --- Button --- */
         .submit-button { 
             width: 100%;
-            padding: 15px;
+            padding: 16px; /* Larger button */
             background-color: var(--primary-color); 
             border: none;
             color: white; 
             font-weight: 700; 
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
-            transition: background-color 0.2s;
-            margin-top: 10px;
+            transition: background-color 0.2s, box-shadow 0.2s;
+            margin-top: 20px;
+            font-size: 1.1em;
+            box-shadow: 0 4px 10px rgba(93, 84, 245, 0.3);
         }
         .submit-button:hover {
             background-color: #4c44c7;
+            box-shadow: 0 6px 15px rgba(93, 84, 245, 0.4);
+        }
+        
+        /* --- Utility --- */
+        .row {
+            display: flex;
+            gap: 20px;
+        }
+        .col {
+            flex: 1;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h4>UBLC Security Incident Report Form 📝</h4>
-        <p>Your report will be logged automatically and sent to the security office. Attach an image for better identification!</p>
+        <h2>UBLC Security Incident Report</h2>
+        <p class="form-description">
+            <i class="fas fa-bullhorn"></i> Your report will be logged immediately and sent to the campus security office. All required fields are marked.
+        </p>
         
         <form action="/submit_report" method="post" enctype="multipart/form-data">
             
-            <label for="reporter_name">Your Name (Optional)</label>
-            <input type="text" placeholder="Juan Dela Cruz" id="reporter_name" name="reporter_name">
-
-            <label for="reporter_contact">Your Contact Email/Phone</label>
-            <input type="text" placeholder="example@ublc.edu.ph" id="reporter_contact" name="reporter_contact" required>
+            <div class="row">
+                <div class="col">
+                    <label for="reporter_name">Your Name (Optional)</label>
+                    <input type="text" placeholder="Juan Dela Cruz" id="reporter_name" name="reporter_name">
+                </div>
+                <div class="col">
+                    <label for="reporter_contact" class="required">Contact Email/Phone</label>
+                    <input type="text" placeholder="example@ublc.edu.ph" id="reporter_contact" name="reporter_contact" required>
+                </div>
+            </div>
             
-            <label for="incident_type">Type of Incident</label>
-            <select id="incident_type" name="incident_type" required>
-                <option value="">Select Type</option>
-                <option value="Vandalism">Vandalism/Damage</option>
-                <option value="Lost Property">Lost Property (use Lost & Found office first)</option>
-                <option value="Suspicious Activity">Suspicious Activity</option>
-                <option value="Noise Complaint">Noise Complaint</option>
-                <option value="Other">Other</option>
-            </select>
+            <div class="row">
+                <div class="col">
+                    <label for="incident_type" class="required">Type of Incident</label>
+                    <select id="incident_type" name="incident_type" required>
+                        <option value="">Select Type</option>
+                        <option value="Physical Injury">Physical Injury/Medical Emergency</option>
+                        <option value="Theft">Theft/Stolen Property</option>
+                        <option value="Vandalism">Vandalism/Damage</option>
+                        <option value="Suspicious Activity">Suspicious Activity</option>
+                        <option value="Noise Complaint">Noise Complaint</option>
+                        <option value="Lost Property">Lost Property (Use L&F chat first)</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label for="location" class="required">Location of Incident</label>
+                    <input type="text" placeholder="CR in Building C, Lobby, etc. (Be specific)" id="location" name="location" required>
+                </div>
+            </div>
 
-            <label for="location">Location of Incident</label>
-            <input type="text" placeholder="CR in Building C, Lobby, etc." id="location" name="location" required>
-
-            <label for="description">Detailed Description</label>
-            <textarea placeholder="Describe what happened, when, and who was involved." id="description" name="description" required></textarea>
+            <label for="description" class="required">Detailed Description</label>
+            <textarea placeholder="Describe what happened, when, and who was involved. Include any time/date details." id="description" name="description" required></textarea>
             
-            <label for="attachment">Attach Image of Lost Item/Incident (PNG/JPG only)</label>
-            <input type="file" id="attachment" name="attachment" accept=".png, .jpg, .jpeg">
+            <div class="file-upload-wrapper">
+                <label for="attachment" class="file-upload-label">
+                    <i class="fas fa-camera"></i> Attach Image of Lost Item/Incident (PNG/JPG only)
+                </label>
+                <input type="file" id="attachment" name="attachment" accept=".png, .jpg, .jpeg">
+            </div>
             
-            <button type="submit" class="submit-button">Submit Report to Security</button>
+            <button type="submit" class="submit-button">
+                <i class="fas fa-paper-plane"></i> Submit Report to Security
+            </button>
             
         </form>
     </div>

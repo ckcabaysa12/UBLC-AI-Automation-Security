@@ -4,12 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Access Requested</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> 
     <style>
         :root {
-            --primary-color: #5D54F5;
-            --secondary-color: #f0f0f0;
-            --header-color: #004d99;
+            --primary-color: #5D54F5; /* Main Blue/Purple */
+            --secondary-color: #f0f0f0; /* Light Gray Background */
+            --success-color: #28a745; /* Green */
+            --header-color: #333; /* Dark Gray for main text */
+            --light-text: #777;
         }
         body { 
             margin: 0; 
@@ -17,69 +20,117 @@
             justify-content: center; 
             align-items: center; 
             min-height: 100vh; 
-            background-color: var(--secondary-color);
+            background: linear-gradient(135deg, var(--secondary-color) 0%, #e6e6e6 100%);
             font-family: 'Roboto', sans-serif;
-            color: #333;
+            color: var(--header-color);
             text-align: center;
         }
         .container { 
-            max-width: 500px; 
-            padding: 30px; 
+            max-width: 450px; 
+            padding: 40px; 
             background-color: white; 
-            border-radius: 20px; 
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); 
+            border-radius: 25px; 
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1); 
         }
-        h4 { 
-            color: var(--header-color); 
-            font-weight: 700;
-            margin-bottom: 10px;
-        }
-        .success { 
-            color: green; 
-            font-weight: 700; 
-            font-size: 1.5em; 
-            margin-bottom: 20px;
+
+        /* --- Status Section --- */
+        .status-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
             display: block;
+            color: var(--primary-color); /* Using primary color for a sophisticated "pending" look */
         }
+        
+        h2 { 
+            color: var(--header-color); 
+            font-weight: 900; 
+            font-size: 1.8em;
+            margin-top: 0;
+            margin-bottom: 5px;
+        }
+        
+        .status-message {
+            font-size: 1.1em; 
+            font-weight: 500; 
+            margin-bottom: 25px;
+            display: block;
+            color: var(--success-color); 
+        }
+
         hr {
             border: 0;
             height: 1px;
             background: #eee;
-            margin: 20px 0;
+            margin: 30px 0;
         }
-        p strong {
+        
+        /* --- Detail Section --- */
+        p {
+            line-height: 1.6;
+            margin-bottom: 15px;
+            color: #555;
+            font-size: 1em;
+        }
+        .highlight {
+            font-weight: 700;
             color: var(--primary-color);
-            font-weight: 500;
+            padding: 2px 6px;
+            background-color: #f7f7ff; /* Lightest tint of primary color */
+            border-radius: 4px;
         }
+        .admin-note {
+            font-size: 0.95em;
+            font-weight: 500;
+            margin-top: 20px;
+            color: var(--header-color);
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+        }
+        
+        /* --- Button --- */
         .back-button { 
             background-color: var(--primary-color); 
             border: none;
             color: white; 
             font-weight: 700; 
-            padding: 10px 20px;
+            padding: 12px 30px; 
             text-decoration: none;
-            border-radius: 8px;
+            border-radius: 10px; 
             display: inline-block;
-            margin-top: 25px;
-            transition: background-color 0.2s;
+            margin-top: 30px;
+            transition: background-color 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 10px rgba(93, 84, 245, 0.4); 
         }
         .back-button:hover {
             background-color: #4c44c7;
+            box-shadow: 0 6px 15px rgba(93, 84, 245, 0.6);
         }
+        
     </style>
 </head>
 <body>
     <div class="container">
-        <h4>Access Request Submitted</h4>
-        <span class="success">✅ Request Received!</span>
+        
+        <span class="status-icon"><i class="fas fa-clock"></i></span> 
+        
+        <h2>Access Request Submitted</h2>
+        <span class="status-message">Request Received Successfully!</span>
         <hr>
-        <p>Thank you, **{{ username }}**.</p>
-        <p>Your request for staff access using the email <strong>{{ email }}</strong> has been forwarded to the system administrator (your team lead).</p>
-        <p style="font-weight: 500;">You will be notified once your account has been manually created and approved.</p>
+        
+        <p>Thank you, <strong class="highlight">{{ username }}</strong>.</p>
+        
+        <p>Your request for **Staff Access** using the email <strong class="highlight">{{ email }}</strong> has been forwarded to the system administrator (your team lead) for review.</p>
+        
+        <div class="admin-note">
+            <i class="fas fa-user-shield"></i> You will be notified via the requested email once your account has been **manually created and approved**.
+        </div>
         
         <a href="/login" class="back-button">
             Back to Login Page
         </a>
+        
     </div>
 </body>
 </html>

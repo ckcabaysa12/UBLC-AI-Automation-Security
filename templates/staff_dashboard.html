@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Dashboard | UBLC Security</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body { background-color: #f4f6f9; }
+        .dashboard-container { margin-top: 30px; }
+        .card-header { border-bottom: 1px solid #e3e6f0; }
+        .card-body { padding: 1.25rem; }
+        .kpi-card { border-left: 0.25rem solid; }
+        .border-primary { border-color: #4e73df !important; }
+        .border-success { border-color: #1cc88a !important; }
+        .border-info { border-color: #36b9cc !important; }
+        /* Table Status Styling */
+        .status-badge { font-size: 0.8em; padding: 0.4em 0.8em; border-radius: 0.25rem; font-weight: bold; }
+        .bg-new { background-color: #e74a3b; color: white; }
+        .bg-in-progress { background-color: #f6c23e; color: black; }
+        .bg-resolved { background-color: #1cc88a; color: white; }
+        .bg-closed { background-color: #36b9cc; color: white; }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-container container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+        <h1 class="h3 mb-0 text-gray-800"><i class="fas fa-tachometer-alt"></i> Security Staff Dashboard</h1>
+        <a href="{{ url_for('logout') }}" class="btn btn-danger btn-sm">
+            <i class="fas fa-sign-out-alt"></i> Logout ({{ session.get('username') }})
+        </a>
+    </div>
+
+    {% if error %}
+    <div class="alert alert-danger" role="alert">
+        {{ error }}
+    </div>
+    {% endif %}
+
+    <div class="row">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card kpi-card border-left-primary shadow h-100 py-2 border-primary">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col me-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Total Incidents (All Time)</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_reports }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card kpi-card border-left-warning shadow h-100 py-2 border-warning">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col me-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Active Reports (New & In Progress)</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ active_reports }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-sync-alt fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card kpi-card border-left-success shadow h-100 py-2 border-success">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col me-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Reports This Week</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ analytics.reports_this_week }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-calendar-check fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card kpi-card border-left-info shadow h-100 py-2 border-info">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col me-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Resolution Rate (Closed/Resolved)</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ analytics.resolution_rate }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-percent fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+        
+        <div class="col-xl-6 col-lg-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Incident Type Breakdown</h6>
+                </div>
+                <div class="card-body">
+                    <div style="height: 300px;">
+                        <canvas id="incidentBreakdownChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-6 col-lg-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Incident Volume Timeline</h6>
+                </div>
+                <div class="card-body">
+                    <div style="height: 300px;">
+                        <canvas id="incidentTimelineChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                    <h6 class="m-0 font-weight-bold text-primary">All Incident Reports</h6>
+                    <span class="badge bg-secondary">Total: {{ total_reports }}</span>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Type</th>
+                                    <th>Location</th>
+                                    <th>Submitted</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for report in reports %}
+                                <tr id="report-row-{{ report.id }}">
+                                    <td>{{ report.id }}</td>
+                                    <td>{{ report.incident_type }}</td>
+                                    <td>{{ report.location }}</td>
+                                    <td>{{ report.timestamp_str }}</td>
+                                    <td>
+                                        {% set status = report.status %}
+                                        {% set status_class = {
+                                            'New': 'bg-new',
+                                            'In Progress': 'bg-in-progress',
+                                            'Resolved': 'bg-resolved',
+                                            'Closed': 'bg-closed'
+                                        }[status] if status in ['New', 'In Progress', 'Resolved', 'Closed'] else 'bg-secondary' %}
+                                        <span id="status-badge-{{ report.id }}" class="status-badge {{ status_class }}">{{ status }}</span>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary view-report" data-id="{{ report.id }}" data-bs-toggle="modal" data-bs-target="#reportModal">View Details</button>
+                                        
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Update
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown-item status-update" href="#" data-id="{{ report.id }}" data-status="New">New</a></li>
+                                                <li><a class="dropdown-item status-update" href="#" data-id="{{ report.id }}" data-status="In Progress">In Progress</a></li>
+                                                <li><hr class="dropdown-divider"></li>
+                                                <li><a class="dropdown-item status-update" href="#" data-id="{{ report.id }}" data-status="Resolved">Resolved</a></li>
+                                                <li><a class="dropdown-item status-update" href="#" data-id="{{ report.id }}" data-status="Closed">Closed</a></li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reportModalLabel">Incident Report Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modal-report-details">
+                <p>Loading report...</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+
+
+<script>
+    // --- 1. Load Data from Flask/Jinja ---
+    const analyticsData = {{ analytics | tojson }};
+
+    // Data for Breakdown Chart (Bar Chart)
+    const breakdownLabels = analyticsData.breakdown.labels;
+    const breakdownVolumes = analyticsData.breakdown.data;
+    
+    // Data for Timeline Chart (Line Chart)
+    const timelineDates = analyticsData.timeline.dates;
+    const timelineVolumes = analyticsData.timeline.volumes;
+
+    // --- 2. Define Chart Colors ---
+    const primaryColor = 'rgb(28, 200, 138)'; 
+    const secondaryColor = 'rgb(52, 144, 220)'; 
+    const warningColor = 'rgb(246, 194, 62)'; 
+    const dangerColor = 'rgb(231, 74, 59)'; 
+
+    // --- 3. Incident Type Breakdown Chart (Bar Chart) ---
+    if (breakdownLabels && breakdownLabels.length > 0) {
+        const breakdownCtx = document.getElementById('incidentBreakdownChart');
+        new Chart(breakdownCtx, {
+            type: 'bar',
+            data: {
+                labels: breakdownLabels,
+                datasets: [{
+                    label: 'Number of Incidents',
+                    data: breakdownVolumes,
+                    backgroundColor: [dangerColor, warningColor, primaryColor, secondaryColor, 'rgba(108, 117, 125, 0.8)'], 
+                    borderColor: 'white',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    title: { display: false } 
+                }
+            }
+        });
+    }
+
+    // --- 4. Incident Volume Timeline Chart (Line Chart) ---
+    if (timelineDates && timelineDates.length > 0) {
+        const timelineCtx = document.getElementById('incidentTimelineChart');
+        new Chart(timelineCtx, {
+            type: 'line',
+            data: {
+                labels: timelineDates, // X-axis: Dates
+                datasets: [{
+                    label: 'Incidents Reported',
+                    data: timelineVolumes, // Y-axis: Volumes
+                    borderColor: secondaryColor,
+                    backgroundColor: 'rgba(52, 144, 220, 0.1)',
+                    borderWidth: 2,
+                    pointRadius: 3,
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true },
+                    x: { }
+                },
+                plugins: {
+                    legend: { display: false },
+                    title: { display: false }
+                }
+            }
+        });
+    }
+</script>
+
+
+<script>
+    // AJAX for viewing report details in modal
+    $(document).ready(function() {
+        $('.view-report').on('click', function() {
+            var reportId = $(this).data('id');
+            $('#modal-report-details').html('<p>Loading report details...</p>'); // Loading indicator
+
+            $.ajax({
+                url: `/staff/report/${reportId}`,
+                method: 'GET',
+                success: function(data) {
+                    let fileHtml = data.file_url ? 
+                        `<p><strong>Attachment:</strong> <a href="${data.file_url}" target="_blank">View Attached Image/File</a></p>` : 
+                        `<p><strong>Attachment:</strong> No File Attached</p>`;
+
+                    let html = `
+                        <h5 class="text-primary">Report ID: ${data.id}</h5>
+                        <p><strong>Status:</strong> <span class="status-badge bg-${data.status.toLowerCase().replace(' ', '-')}">${data.status}</span></p>
+                        <p><strong>Submitted:</strong> ${data.timestamp_str}</p>
+                        <p><strong>Type:</strong> ${data.incident_type}</p>
+                        <p><strong>Location:</strong> ${data.location}</p>
+                        <hr>
+                        <h6>Reporter Information</h6>
+                        <p><strong>Name:</strong> ${data.reporter_name || 'Anonymous'}</p>
+                        <p><strong>Contact:</strong> ${data.reporter_contact || 'N/A'}</p>
+                        <hr>
+                        <h6>Incident Description</h6>
+                        <p>${data.description}</p>
+                        ${fileHtml}
+                    `;
+                    $('#modal-report-details').html(html);
+                },
+                error: function(xhr, status, error) {
+                    $('#modal-report-details').html('<div class="alert alert-danger">Failed to load report details: ' + error + '</div>');
+                }
+            });
+        });
+        
+        // AJAX for updating status
+        $('.status-update').on('click', function(e) {
+            e.preventDefault();
+            var reportId = $(this).data('id');
+            var newStatus = $(this).data('status');
+            var $badge = $(`#status-badge-${reportId}`);
+            var $row = $(`#report-row-${reportId}`);
+
+            $.ajax({
+                url: `/staff/update_status/${reportId}`,
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ status: newStatus }),
+                success: function(response) {
+                    // 1. Update Badge Text
+                    $badge.text(newStatus);
+
+                    // 2. Update Badge Color
+                    $badge.removeClass('bg-new bg-in-progress bg-resolved bg-closed bg-secondary');
+                    var newClass = 'bg-' + newStatus.toLowerCase().replace(' ', '-');
+                    $badge.addClass(newClass);
+
+                    // Optional: Provide visual feedback (e.g., flash the row)
+                    $row.css('background-color', '#ffffcc');
+                    setTimeout(() => $row.css('background-color', ''), 500); 
+                    
+                    // console.log(response.message);
+                },
+                error: function(xhr, status, error) {
+                    alert('Error updating status: ' + error);
+                }
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

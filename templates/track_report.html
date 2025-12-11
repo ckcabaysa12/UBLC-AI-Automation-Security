@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Incident Report</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container { max-width: 600px; margin-top: 50px; }
+        .status-box { padding: 20px; border-radius: 8px; }
+        .bg-new { background-color: #e74a3b !important; color: white !important; }
+        .bg-in-progress { background-color: #f6c23e !important; color: black !important; }
+        .bg-resolved { background-color: #1cc88a !important; color: white !important; }
+        .bg-closed { background-color: #36b9cc !important; color: white !important; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h3 class="mb-4 text-center">Incident Report Status Tracker</h3>
+    
+    <form method="GET" action="/track_report/{{ report_id if report_id else '' }}">
+        <div class="input-group mb-4">
+            <input type="text" class="form-control" name="report_id" placeholder="Enter your Report ID (e.g., UB-20240501123456)" required>
+            <button class="btn btn-primary" type="submit">Track Status</button>
+        </div>
+    </form>
+    
+    {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+    {% elif report_id %}
+        {% set status_class = {
+            'New': 'bg-new',
+            'In Progress': 'bg-in-progress',
+            'Resolved': 'bg-resolved',
+            'Closed': 'bg-closed'
+        }[status] if status in ['New', 'In Progress', 'Resolved', 'Closed'] else 'bg-secondary' %}
+
+        <div class="status-box {{ status_class }}">
+            <h4>Report ID: **{{ report_id }}**</h4>
+            <hr class="text-white">
+            <p>Incident Type: **{{ incident_type }}**</p>
+            <p>Location: **{{ location }}**</p>
+            <p class="h5">Current Status: **{{ status }}**</p>
+        </div>
+        
+        <div class="mt-3 alert alert-info">
+            <p class="mb-0">**Status Meaning:**</p>
+            <small>
+                **New:** The report has been received and is waiting for assignment.<br>
+                **In Progress:** A staff member has been assigned and is actively investigating the incident.<br>
+                **Resolved:** The core issue has been addressed and action has been completed.<br>
+                **Closed:** The case file is complete and requires no further action.
+            </small>
+        </div>
+    {% endif %}
+
+    <div class="text-center mt-4">
+        <a href="{{ url_for('home') }}" class="btn btn-secondary">Back to Chat</a>
+    </div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
