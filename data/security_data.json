@@ -1,0 +1,16 @@
+{
+  "campus_security": {
+    "lost_and_found_office": "The official Lost and Found collection point is located at the **Main Gate Security Office**, available 24/7.",
+    
+    "lost_item_instruction": "To report a lost item, please use the online Lost Item Report Form available below. If you found an item, please bring it to the Main Gate Security Office.",
+    "lost_item_link": "/report_form", 
+    
+    "incident_reporting_instruction": "To report a non-emergency incident (e.g., vandalism, noise complaint), please use the online Incident Reporting Form available below.",
+    "incident_reporting_link": "/report_form", 
+    
+    "immediate_contact_number": "For urgent matters or immediate security assistance, call the Campus Security Hotline at **(043) 987-6543** (Local 100).",
+    "emergency_response": "In case of fire or a medical emergency, follow evacuation protocols and call **911** (for external assistance) or the Campus Security Hotline.",
+    "parking_rules": "Parking is restricted to designated areas only. Unauthorized vehicles will be clamped. Obtain a parking permit from the Admin office.",
+    "visitor_policy": "All visitors must present a valid ID and register at the Main Gate. They must be accompanied by a UBLC staff or faculty member while inside the campus."
+  }
+}

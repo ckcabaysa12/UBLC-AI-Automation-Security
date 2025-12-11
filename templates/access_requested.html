@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Access Requested</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #5D54F5;
+            --secondary-color: #f0f0f0;
+            --header-color: #004d99;
+        }
+        body { 
+            margin: 0; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            background-color: var(--secondary-color);
+            font-family: 'Roboto', sans-serif;
+            color: #333;
+            text-align: center;
+        }
+        .container { 
+            max-width: 500px; 
+            padding: 30px; 
+            background-color: white; 
+            border-radius: 20px; 
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); 
+        }
+        h4 { 
+            color: var(--header-color); 
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .success { 
+            color: green; 
+            font-weight: 700; 
+            font-size: 1.5em; 
+            margin-bottom: 20px;
+            display: block;
+        }
+        hr {
+            border: 0;
+            height: 1px;
+            background: #eee;
+            margin: 20px 0;
+        }
+        p strong {
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+        .back-button { 
+            background-color: var(--primary-color); 
+            border: none;
+            color: white; 
+            font-weight: 700; 
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 8px;
+            display: inline-block;
+            margin-top: 25px;
+            transition: background-color 0.2s;
+        }
+        .back-button:hover {
+            background-color: #4c44c7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h4>Access Request Submitted</h4>
+        <span class="success">✅ Request Received!</span>
+        <hr>
+        <p>Thank you, **{{ username }}**.</p>
+        <p>Your request for staff access using the email <strong>{{ email }}</strong> has been forwarded to the system administrator (your team lead).</p>
+        <p style="font-weight: 500;">You will be notified once your account has been manually created and approved.</p>
+        
+        <a href="/login" class="back-button">
+            Back to Login Page
+        </a>
+    </div>
+</body>
+</html>

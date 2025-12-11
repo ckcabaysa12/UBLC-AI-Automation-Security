@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UBLC Student Signup</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #5D54F5; 
+            --secondary-color: #f0f0f0; 
+            --text-color: #333;
+            --input-bg: #f7f7f7;
+            --header-color: #004d99;
+        }
+        body { 
+            margin: 0; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            background-color: var(--secondary-color);
+            font-family: 'Roboto', sans-serif;
+            color: var(--text-color);
+        }
+        .signup-container { 
+            width: 100%; 
+            max-width: 380px; 
+            padding: 40px; 
+            background-color: white; 
+            border-radius: 20px; 
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); 
+            text-align: center; 
+        }
+        .logo-icon {
+            font-size: 2em;
+            color: white;
+            background-color: var(--primary-color);
+            padding: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+        .welcome-text {
+            color: var(--text-color);
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        .header { 
+            color: var(--header-color); 
+            font-size: 1.2em;
+            margin-bottom: 25px;
+            font-weight: 700;
+        }
+        .error-message { 
+            color: red; 
+            margin-bottom: 15px; 
+            font-size: 0.9em;
+        }
+        input[type="text"], input[type="email"], input[type="password"] {
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: var(--input-bg);
+            box-sizing: border-box; 
+        }
+        .signup-button { 
+            width: 100%;
+            padding: 15px;
+            background-color: var(--primary-color); 
+            border: none;
+            color: white; 
+            font-weight: 700; 
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .signup-button:hover {
+            background-color: #4c44c7;
+        }
+        .back-link { 
+            margin-top: 25px; 
+            font-size: 0.9em; 
+            color: #777;
+        }
+        .back-link a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <div class="logo-icon">🧑‍🎓</div>
+        <h4 class="header">Student Account Registration</h4>
+        
+        <p style="font-size: 0.9em; color: #777; margin-bottom: 30px;">Register with your **@ublc.edu.ph** email to access the assistant.</p>
+        
+        {% if error %}
+            <p class="error-message">❌ {{ error }}</p>
+        {% endif %}
+
+        <form action="/signup" method="post">
+            <input type="text" placeholder="Full Name" id="full_name" name="full_name" required>
+
+            <input type="email" placeholder="UBLC Email (@ublc.edu.ph)" id="email" name="email" required>
+
+            <input type="password" placeholder="Create Password" id="password" name="password" required>
+
+            <input type="password" placeholder="Confirm Password" id="confirm_password" name="confirm_password" required>
+
+            <button type="submit" class="signup-button">Sign Up</button>
+        </form>
+        
+        <div class="back-link">
+            <p>Already have an account? <a href="/login">Sign In</a></p>
+        </div>
+    </div>
+</body>
+</html>

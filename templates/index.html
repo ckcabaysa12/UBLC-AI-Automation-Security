@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UBLC Campus Security AI Assistant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #5D54F5; /* A vibrant purple */
+            --secondary-color: #f0f0f0;
+            --text-color: #333;
+            --header-color: #004d99;
+            --button-text-color: white;
+            --input-bg: #f7f7f7;
+        }
+        body { 
+            margin: 0; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            background-color: var(--secondary-color);
+            font-family: 'Roboto', sans-serif;
+            color: var(--text-color);
+        }
+        .chat-container { 
+            width: 100%; 
+            max-width: 700px; 
+            height: 90vh; 
+            background-color: white; 
+            border-radius: 20px; 
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); 
+            display: flex; 
+            flex-direction: column; 
+            overflow: hidden; 
+        }
+        .header { 
+            background-color: var(--header-color); 
+            color: white; 
+            padding: 15px; 
+            text-align: center; 
+            font-size: 1.5em; 
+            font-weight: 700; 
+        }
+        .logout-area {
+            text-align: right; 
+            padding: 10px 20px; 
+            background-color: #fff;
+            border-bottom: 1px solid #eee;
+        }
+        .logout-link {
+            color: var(--primary-color); 
+            font-size: 0.9em; 
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .chat-box { 
+            flex-grow: 1; 
+            padding: 20px; 
+            overflow-y: auto; 
+            background-color: #f9f9f9; 
+        }
+        .message { 
+            margin-bottom: 15px; 
+            display: flex; 
+        }
+        .user-message { 
+            justify-content: flex-end; 
+        }
+        .bot-message { 
+            justify-content: flex-start; 
+        }
+        .message-bubble { 
+            padding: 12px 18px; 
+            border-radius: 18px; 
+            max-width: 70%; 
+            line-height: 1.5; 
+            white-space: pre-wrap; 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+        .user-message .message-bubble { 
+            background-color: var(--primary-color); 
+            color: white; 
+            border-bottom-right-radius: 5px; 
+        }
+        .bot-message .message-bubble { 
+            background-color: #ffffff; 
+            color: var(--text-color); 
+            border-bottom-left-radius: 5px; 
+        }
+        .input-area { 
+            padding: 15px 20px; 
+            border-top: 1px solid #ddd; 
+            display: flex; 
+            flex-direction: column; 
+            background-color: white;
+        }
+        .report-button-area {
+            text-align: center; 
+            margin-bottom: 15px; 
+        }
+        .report-button {
+            background-color: #ffcc00; 
+            border: none; 
+            color: var(--header-color); 
+            font-weight: 700; 
+            text-transform: uppercase;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: background-color 0.2s;
+        }
+        .report-button:hover {
+            background-color: #e6b800;
+        }
+        .input-controls { 
+            display: flex; 
+        }
+        .input-controls input { 
+            flex-grow: 1; 
+            margin-right: 10px; 
+            border-radius: 8px; 
+            border: 1px solid #ddd; 
+            padding: 12px; 
+            background-color: var(--input-bg);
+        }
+        .input-controls button { 
+            background-color: var(--primary-color); 
+            border: none; 
+            color: var(--button-text-color); 
+            font-weight: 700; 
+            padding: 10px 20px; 
+            cursor: pointer; 
+            border-radius: 8px; 
+        }
+        .input-controls button:hover { 
+            background-color: #4c44c7; 
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="header">UBLC Campus Security AI Assistant 🛡️</div>
+        
+        <div class="logout-area">
+            <a href="/logout" class="logout-link">Logout</a>
+        </div>
+        
+        <div class="chat-box" id="chatBox">
+            <div class="message bot-message">
+                <div class="message-bubble">
+                    Hello! I am the UBLC Campus Security AI Assistant, ready to help with Lost and Found, Incident Reporting, Parking Rules, and Emergency Procedures. How can I assist you today?
+                </div>
+            </div>
+        </div>
+
+        <div class="input-area">
+            
+            <div class="report-button-area">
+                <a href="/report_form" class="report-button">
+                    ⚡ Submit New Incident Report
+                </a>
+            </div>
+            
+            <div class="input-controls">
+                <input type="text" id="userInput" placeholder="Ask about rules, reporting, or emergencies..." />
+                <button onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('userInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        function appendMessage(sender, text) {
+            const chatBox = document.getElementById('chatBox');
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', sender === 'user' ? 'user-message' : 'bot-message');
+
+            const bubbleDiv = document.createElement('div');
+            bubbleDiv.classList.add('message-bubble');
+            
+            bubbleDiv.innerHTML = text.replace(/\n/g, '<br>');
+
+            messageDiv.appendChild(bubbleDiv);
+            chatBox.appendChild(messageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+            return bubbleDiv; 
+        }
+
+        function updateMessage(element, newText) {
+            element.innerHTML = newText.replace(/\n/g, '<br>');
+            const chatBox = document.getElementById('chatBox');
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        async function sendMessage() {
+            const userInput = document.getElementById('userInput');
+            const userMessage = userInput.value.trim();
+
+            if (!userMessage) return;
+
+            appendMessage('user', userMessage);
+            userInput.value = '';
+
+            const loadingBubble = appendMessage('bot', '...');
+            
+            try {
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ message: userMessage })
+                });
+
+                const data = await response.json();
+                
+                updateMessage(loadingBubble, data.answer);
+
+            } catch (error) {
+                console.error('Error fetching chat response:', error);
+                // Check for unauthorized access error
+                if (error.message.includes('401')) {
+                     updateMessage(loadingBubble, 'Session expired or unauthorized. Please refresh and log in again.');
+                } else {
+                     updateMessage(loadingBubble, 'Sorry, I am currently unable to connect to the server.');
+                }
+            }
+        }
+    </script>
+</body>
+</html>

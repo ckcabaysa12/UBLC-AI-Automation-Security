@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UBLC Security Incident Report</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #5D54F5;
+            --secondary-color: #f0f0f0;
+            --text-color: #333;
+            --header-color: #004d99;
+            --input-bg: #f7f7f7;
+        }
+        body { 
+            margin: 0; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            background-color: var(--secondary-color);
+            font-family: 'Roboto', sans-serif;
+            color: var(--text-color);
+        }
+        .container { 
+            max-width: 600px; 
+            padding: 30px; 
+            background-color: white; 
+            border-radius: 20px; 
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); 
+        }
+        h4 { 
+            color: var(--header-color); 
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-align: center;
+        } 
+        p {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #777;
+        }
+        hr {
+            border: 0;
+            height: 1px;
+            background: #eee;
+            margin: 20px 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #555;
+        }
+        input[type="text"], input[type="email"], select, textarea, input[type="file"] {
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: var(--input-bg);
+            box-sizing: border-box; 
+        }
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        /* Specific styling for file input to make it look nicer */
+        input[type="file"] {
+            padding: 10px 15px;
+            background-color: #fff;
+            border: 1px dashed #ccc;
+        }
+        .submit-button { 
+            width: 100%;
+            padding: 15px;
+            background-color: var(--primary-color); 
+            border: none;
+            color: white; 
+            font-weight: 700; 
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-top: 10px;
+        }
+        .submit-button:hover {
+            background-color: #4c44c7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h4>UBLC Security Incident Report Form 📝</h4>
+        <p>Your report will be logged automatically and sent to the security office. Attach an image for better identification!</p>
+        
+        <form action="/submit_report" method="post" enctype="multipart/form-data">
+            
+            <label for="reporter_name">Your Name (Optional)</label>
+            <input type="text" placeholder="Juan Dela Cruz" id="reporter_name" name="reporter_name">
+
+            <label for="reporter_contact">Your Contact Email/Phone</label>
+            <input type="text" placeholder="example@ublc.edu.ph" id="reporter_contact" name="reporter_contact" required>
+            
+            <label for="incident_type">Type of Incident</label>
+            <select id="incident_type" name="incident_type" required>
+                <option value="">Select Type</option>
+                <option value="Vandalism">Vandalism/Damage</option>
+                <option value="Lost Property">Lost Property (use Lost & Found office first)</option>
+                <option value="Suspicious Activity">Suspicious Activity</option>
+                <option value="Noise Complaint">Noise Complaint</option>
+                <option value="Other">Other</option>
+            </select>
+
+            <label for="location">Location of Incident</label>
+            <input type="text" placeholder="CR in Building C, Lobby, etc." id="location" name="location" required>
+
+            <label for="description">Detailed Description</label>
+            <textarea placeholder="Describe what happened, when, and who was involved." id="description" name="description" required></textarea>
+            
+            <label for="attachment">Attach Image of Lost Item/Incident (PNG/JPG only)</label>
+            <input type="file" id="attachment" name="attachment" accept=".png, .jpg, .jpeg">
+            
+            <button type="submit" class="submit-button">Submit Report to Security</button>
+            
+        </form>
+    </div>
+</body>
+</html>

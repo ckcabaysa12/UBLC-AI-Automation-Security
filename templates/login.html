@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UBLC Staff Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #5D54F5; /* A vibrant purple */
+            --secondary-color: #f0ffef; /* Light green-white background */
+            --text-color: #333;
+            --input-bg: #f7f7f7;
+            --header-color: #004d99;
+        }
+        body { 
+            margin: 0; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            background-color: var(--secondary-color);
+            font-family: 'Roboto', sans-serif;
+            color: var(--text-color);
+        }
+        .login-container { 
+            width: 100%; 
+            max-width: 380px; 
+            padding: 40px; 
+            background-color: white; 
+            border-radius: 20px; 
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); 
+            text-align: center; 
+        }
+        .logo-icon {
+            font-size: 2em;
+            color: white;
+            background-color: var(--primary-color);
+            padding: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+        .welcome-text {
+            color: var(--text-color);
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        .header { 
+            color: var(--header-color); 
+            font-size: 1em;
+            margin-bottom: 25px;
+        }
+        .error-message { 
+            color: red; 
+            margin-bottom: 15px; 
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: var(--input-bg);
+            box-sizing: border-box; /* Ensures padding doesn't affect total width */
+        }
+        .login-button { 
+            width: 100%;
+            padding: 15px;
+            background-color: var(--primary-color); 
+            border: none;
+            color: white; 
+            font-weight: 700; 
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .login-button:hover {
+            background-color: #4c44c7;
+        }
+        .signup-link { 
+            margin-top: 25px; 
+            font-size: 0.9em; 
+            color: #777;
+        }
+        .signup-link a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo-icon">🤖</div> <p class="welcome-text">Welcome Back</p>
+        <h4 class="header">Sign in to continue to the chatbot</h4>
+
+        {% if error %}
+            <p class="error-message">{{ error }}</p>
+        {% endif %}
+
+        <form action="/login" method="post">
+            <input type="text" placeholder="Username (e.g., ublc_security)" id="username" name="username" required>
+
+            <input type="password" placeholder="Password (e.g., final_exam)" id="password" name="password" required>
+
+            <button type="submit" class="login-button">Sign In</button>
+        </form>
+        
+        <div class="signup-link">
+            <p>Don't have an account? <a href="/signup">Sign up</a></p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,13 @@
+# Environment variables file
+.env
+
+# Firebase/Google Service Account Key
+*.json
+# Or, if you only want to ignore the specific file:
+# ub-ai-chatbot-security-firebase-adminsdk-fbsvc-abad250500.json
+
+# Python cache and environment files
+__pycache__/
+venv/
+.venv/
+*.pyc
