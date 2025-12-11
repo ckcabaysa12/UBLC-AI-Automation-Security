@@ -3,170 +3,214 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UBLC Security Incident Report</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> 
+    <title>Submit Incident Report | UBLC Security</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #5D54F5; /* Main Blue/Purple */
-            --secondary-color: #f0f0f0;
-            --text-color: #333;
-            --header-color: #333; /* Darker header for contrast */
-            --light-text: #777;
-            --input-bg: #ffffff; /* Use white for cleaner input fields */
-            --border-color: #ddd;
-            --required-color: #dc3545; /* Red for required indicator */
+            --bg: radial-gradient(circle at 20% 20%, #eef1ff 0%, #f4f7ff 40%, #f7f9ff 100%);
+            --card: #ffffff;
+            --primary: #4935ff;
+            --primary-hover: #3c2bd6;
+            --text-main: #1f2a3d;
+            --text-sub: #6b7280;
+            --stroke: #e5e7eb;
+            --input-bg: #f7f7fb;
         }
-        body { 
-            margin: 0; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            min-height: 100vh; 
-            background: linear-gradient(135deg, var(--secondary-color) 0%, #e6e6e6 100%);
-            font-family: 'Roboto', sans-serif;
-            color: var(--text-color);
-        }
-        .container { 
-            max-width: 650px; /* Slightly wider container */
-            padding: 40px; 
-            background-color: white; 
-            border-radius: 25px; /* Softer edges */
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15); 
-            margin: 20px;
-        }
-
-        /* --- Header and Instructions --- */
-        h2 { 
-            color: var(--header-color); 
-            font-weight: 700;
-            font-size: 1.8em;
-            margin-bottom: 5px;
-            text-align: center;
-        } 
-        .form-description {
-            text-align: center;
-            margin-bottom: 30px;
-            color: var(--light-text);
-            font-size: 0.95em;
-        }
-
-        /* --- Form Elements --- */
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: var(--text-color);
-            font-size: 0.9em;
-        }
-        .required::after {
-            content: '*';
-            color: var(--required-color);
-            margin-left: 4px;
-        }
-        input[type="text"], input[type="email"], select, textarea {
-            width: 100%;
-            padding: 14px 15px; /* Increased padding */
-            margin-bottom: 25px; /* Increased margin */
-            border: 1px solid var(--border-color);
-            border-radius: 10px; /* Softer input corners */
-            background-color: var(--input-bg);
-            box-sizing: border-box; 
-            transition: border-color 0.2s, box-shadow 0.2s;
-            font-size: 1em;
-        }
-        input:focus, select:focus, textarea:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(93, 84, 245, 0.1);
-            outline: none;
-        }
-        textarea {
-            resize: vertical;
-            min-height: 120px;
-        }
-
-        /* --- File Input Styling --- */
-        .file-upload-wrapper {
-            border: 2px dashed #ccc;
-            border-radius: 10px;
-            padding: 15px;
-            text-align: center;
-            background-color: #f9f9f9;
-            margin-bottom: 25px;
-            cursor: pointer;
-            transition: border-color 0.2s;
-        }
-        .file-upload-wrapper:hover {
-            border-color: var(--primary-color);
-        }
-        input[type="file"] {
-            display: none; /* Hide default file input */
-        }
-        .file-upload-label {
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--primary-color);
-            font-weight: 700;
-            cursor: pointer;
+            background: var(--bg);
+            font-family: 'Inter', sans-serif;
+            color: var(--text-main);
         }
-        .file-upload-label i {
-            margin-right: 10px;
-        }
-        
-        /* --- Button --- */
-        .submit-button { 
+        .card {
             width: 100%;
-            padding: 16px; /* Larger button */
-            background-color: var(--primary-color); 
-            border: none;
-            color: white; 
-            font-weight: 700; 
-            border-radius: 10px;
-            cursor: pointer;
-            transition: background-color 0.2s, box-shadow 0.2s;
-            margin-top: 20px;
-            font-size: 1.1em;
-            box-shadow: 0 4px 10px rgba(93, 84, 245, 0.3);
+            max-width: 620px;
+            background: var(--card);
+            border-radius: 18px;
+            padding: 34px 36px 32px;
+            box-shadow: 0 18px 50px rgba(77, 91, 128, 0.12);
+            border: 1px solid rgba(0, 0, 0, 0.02);
         }
-        .submit-button:hover {
-            background-color: #4c44c7;
-            box-shadow: 0 6px 15px rgba(93, 84, 245, 0.4);
+        .logo-badge {
+            height: 54px;
+            width: 54px;
+            margin: 0 auto 16px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #5c51ff, #6f6bff);
+            display: grid;
+            place-items: center;
         }
-        
-        /* --- Utility --- */
-        .row {
+        .card-header {
             display: flex;
-            gap: 20px;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 10px;
         }
-        .col {
-            flex: 1;
+        .header-spacer {
+            width: 42px;
+            height: 1px;
+            flex-shrink: 0;
         }
+        .back-link {
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 10px;
+            border-radius: 10px;
+            background: #f4f5ff;
+            transition: background 0.2s;
+        }
+        .back-link:hover { background: #e7e9ff; }
+        .title {
+            margin: 0;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 700;
+        }
+        .subtitle {
+            text-align: center;
+            margin: 6px 0 24px;
+            font-size: 14px;
+            color: var(--text-sub);
+        }
+        .field { margin-bottom: 16px; }
+        .field label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 13px;
+            color: var(--text-main);
+            font-weight: 600;
+        }
+        .input-wrap { position: relative; }
+        .input-wrap input,
+        .input-wrap select,
+        .input-wrap textarea {
+            width: 100%;
+            padding: 14px 14px 14px 46px;
+            border: 1px solid var(--stroke);
+            border-radius: 12px;
+            background: var(--input-bg);
+            font-size: 14px;
+            color: var(--text-main);
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+        }
+        .input-wrap textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        .input-wrap input:focus,
+        .input-wrap select:focus,
+        .input-wrap textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(73,53,255,0.12);
+            background: #fff;
+        }
+        .icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            opacity: 0.65;
+        }
+        .file-input {
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px dashed #cbd5e1;
+            background: #fff;
+            font-size: 14px;
+            color: var(--text-sub);
+            width: 100%;
+        }
+        .note {
+            font-size: 12px;
+            color: var(--text-sub);
+            margin-top: -6px;
+            margin-bottom: 14px;
+        }
+        .submit-button {
+            width: 100%;
+            border: none;
+            background: var(--primary);
+            color: #fff;
+            font-weight: 700;
+            border-radius: 12px;
+            padding: 14px;
+            font-size: 15px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            margin-top: 6px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .submit-button:hover { background: var(--primary-hover); }
+        .submit-button:active { transform: translateY(1px); }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>UBLC Security Incident Report</h2>
-        <p class="form-description">
-            <i class="fas fa-bullhorn"></i> Your report will be logged immediately and sent to the campus security office. All required fields are marked.
-        </p>
-        
+    <div class="card">
+        <div class="card-header">
+            <a class="back-link" href="/">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5 12h14" stroke="#4935ff" stroke-width="1.8" stroke-linecap="round"/>
+                    <path d="m10 7-5 5 5 5" stroke="#4935ff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Back to chat
+            </a>
+            <div class="logo-badge" aria-hidden="true">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5 18.5 5.6 15A2 2 0 0 0 7.58 13.35L8 13h8a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9.5c0 .39.39.66.75.5l.25-.11Z" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M9 9h6m-6 3h3" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
+                </svg>
+            </div>
+            <div class="header-spacer" aria-hidden="true"></div>
+        </div>
+        <p class="title">Submit an Incident Report</p>
+        <p class="subtitle">Your report will be sent to the security office. Attach an image if helpful.</p>
+
         <form action="/submit_report" method="post" enctype="multipart/form-data">
-            
-            <div class="row">
-                <div class="col">
-                    <label for="reporter_name">Your Name (Optional)</label>
-                    <input type="text" placeholder="Juan Dela Cruz" id="reporter_name" name="reporter_name">
-                </div>
-                <div class="col">
-                    <label for="reporter_contact" class="required">Contact Email/Phone</label>
-                    <input type="text" placeholder="example@ublc.edu.ph" id="reporter_contact" name="reporter_contact" required>
+            <div class="field">
+                <label for="reporter_name">Your Name (Optional)</label>
+                <div class="input-wrap">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 12c2.485 0 4.5-2.015 4.5-4.5S14.485 3 12 3 7.5 5.015 7.5 7.5 9.515 12 12 12Z" stroke="#6b7280" stroke-width="1.5"/>
+                        <path d="M6 19.25c0-2.347 2.686-4.25 6-4.25s6 1.903 6 4.25" stroke="#6b7280" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                    <input type="text" id="reporter_name" name="reporter_name" placeholder="Juan Dela Cruz">
                 </div>
             </div>
-            
-            <div class="row">
-                <div class="col">
-                    <label for="incident_type" class="required">Type of Incident</label>
+
+            <div class="field">
+                <label for="reporter_contact">Your Contact Email/Phone</label>
+                <div class="input-wrap">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M4 6.5C4 5.67 4.67 5 5.5 5h13c.83 0 1.5.67 1.5 1.5v11c0 .83-.67 1.5-1.5 1.5h-13C4.67 19 4 18.33 4 17.5v-11Z" stroke="#6b7280" stroke-width="1.5"/>
+                        <path d="M5 7l7 5 7-5" stroke="#6b7280" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <input type="text" id="reporter_contact" name="reporter_contact" placeholder="example@ublc.edu.ph" required>
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="incident_type">Type of Incident</label>
+                <div class="input-wrap">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 3 4 7.5l8 4.5 8-4.5L12 3Zm0 9v9" stroke="#6b7280" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
                     <select id="incident_type" name="incident_type" required>
                         <option value="">Select Type</option>
                         <option value="Physical Injury">Physical Injury/Medical Emergency</option>
@@ -174,31 +218,49 @@
                         <option value="Vandalism">Vandalism/Damage</option>
                         <option value="Suspicious Activity">Suspicious Activity</option>
                         <option value="Noise Complaint">Noise Complaint</option>
-                        <option value="Lost Property">Lost Property (Use L&F chat first)</option>
+                        <option value="Lost Property">Lost Property (use Lost &amp; Found office first)</option>
                         <option value="Other">Other</option>
                     </select>
                 </div>
-                <div class="col">
-                    <label for="location" class="required">Location of Incident</label>
-                    <input type="text" placeholder="CR in Building C, Lobby, etc. (Be specific)" id="location" name="location" required>
+            </div>
+
+            <div class="field">
+                <label for="location">Location of Incident</label>
+                <div class="input-wrap">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 21s6-5.148 6-10.5S15.314 3 12 3 6 5.79 6 10.5 12 21 12 21Z" stroke="#6b7280" stroke-width="1.5"/>
+                        <circle cx="12" cy="10.5" r="2.5" stroke="#6b7280" stroke-width="1.5"/>
+                    </svg>
+                    <input type="text" id="location" name="location" placeholder="CR in Building C, Lobby, etc." required>
                 </div>
             </div>
 
-            <label for="description" class="required">Detailed Description</label>
-            <textarea placeholder="Describe what happened, when, and who was involved. Include any time/date details." id="description" name="description" required></textarea>
-            
-            <div class="file-upload-wrapper">
-                <label for="attachment" class="file-upload-label">
-                    <i class="fas fa-camera"></i> Attach Image of Lost Item/Incident (PNG/JPG only)
-                </label>
-                <input type="file" id="attachment" name="attachment" accept=".png, .jpg, .jpeg">
+            <div class="field">
+                <label for="description">Detailed Description</label>
+                <div class="input-wrap">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M7 5h10M7 9h10M7 13h6" stroke="#6b7280" stroke-width="1.5" stroke-linecap="round"/>
+                        <rect x="4" y="3" width="16" height="18" rx="2" stroke="#6b7280" stroke-width="1.5"/>
+                    </svg>
+                    <textarea id="description" name="description" placeholder="Describe what happened, when, and who was involved." required></textarea>
+                </div>
             </div>
-            
+
+            <div class="field">
+                <label for="attachment">Attach Image (PNG/JPG)</label>
+                <p class="note">Optional: add a photo to help security identify the item or incident.</p>
+                <input class="file-input" type="file" id="attachment" name="attachment" accept=".png, .jpg, .jpeg">
+            </div>
+
             <button type="submit" class="submit-button">
-                <i class="fas fa-paper-plane"></i> Submit Report to Security
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4 12h6m0 0L5.5 6.5M10 12 5.5 17.5" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M12 5.343a1 1 0 0 1 1.296-.954l6.853 2.284a1 1 0 0 1 .1 1.87l-17 8.084a1 1 0 0 1-1.334-1.234l2.174-7.1" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
+                </svg>
+                Submit Report to Security
             </button>
-            
         </form>
     </div>
 </body>
 </html>
+
