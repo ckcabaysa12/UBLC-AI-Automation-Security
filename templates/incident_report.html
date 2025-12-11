@@ -26,36 +26,31 @@
             background: var(--bg);
             font-family: 'Inter', sans-serif;
             color: var(--text-main);
+            padding: 20px;
         }
         .card {
             width: 100%;
-            max-width: 620px;
+            max-width: 640px;
             background: var(--card);
             border-radius: 18px;
-            padding: 34px 36px 32px;
+            padding: 28px 32px 32px;
             box-shadow: 0 18px 50px rgba(77, 91, 128, 0.12);
             border: 1px solid rgba(0, 0, 0, 0.02);
         }
         .logo-badge {
-            height: 54px;
-            width: 54px;
-            margin: 0 auto 16px;
-            border-radius: 14px;
+            height: 64px;
+            width: 64px;
+            margin: 0 auto 14px;
+            border-radius: 16px;
             background: linear-gradient(135deg, #5c51ff, #6f6bff);
             display: grid;
             place-items: center;
+            color: #fff;
         }
-        .card-header {
+        .top-actions {
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            margin-bottom: 10px;
-        }
-        .header-spacer {
-            width: 42px;
-            height: 1px;
-            flex-shrink: 0;
+            justify-content: flex-start;
+            margin-bottom: 12px;
         }
         .back-link {
             color: var(--primary);
@@ -74,12 +69,12 @@
         .title {
             margin: 0;
             text-align: center;
-            font-size: 18px;
-            font-weight: 700;
+            font-size: 19px;
+            font-weight: 750;
         }
         .subtitle {
             text-align: center;
-            margin: 6px 0 24px;
+            margin: 8px 0 22px;
             font-size: 14px;
             color: var(--text-sub);
         }
@@ -163,7 +158,7 @@
 </head>
 <body>
     <div class="card">
-        <div class="card-header">
+        <div class="top-actions">
             <a class="back-link" href="/">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M5 12h14" stroke="#4935ff" stroke-width="1.8" stroke-linecap="round"/>
@@ -171,13 +166,12 @@
                 </svg>
                 Back to chat
             </a>
-            <div class="logo-badge" aria-hidden="true">
-                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M5 18.5 5.6 15A2 2 0 0 0 7.58 13.35L8 13h8a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9.5c0 .39.39.66.75.5l.25-.11Z" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M9 9h6m-6 3h3" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
-                </svg>
-            </div>
-            <div class="header-spacer" aria-hidden="true"></div>
+        </div>
+        <div class="logo-badge" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 18.5 5.6 15A2 2 0 0 0 7.58 13.35L8 13h8a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9.5c0 .39.39.66.75.5l.25-.11Z" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M9 9h6m-6 3h3" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
+            </svg>
         </div>
         <p class="title">Submit an Incident Report</p>
         <p class="subtitle">Your report will be sent to the security office. Attach an image if helpful.</p>

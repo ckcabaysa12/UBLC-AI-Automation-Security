@@ -192,7 +192,14 @@ def logout():
     session.pop('logged_in', None)
     session.pop('user_type', None)
     session.pop('username', None)
+    session.pop('history', None)
+    session.pop('chat_log_id', None) # Clear the unique chat session ID
     return redirect(url_for('login'))
+
+
+@app.route("/health")
+def health():
+    return jsonify({"status": "ok"})
 
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
@@ -207,8 +214,6 @@ def signup():
         
         if password != confirm_password:
             return render_template('signup.html', error="Passwords do not match.")
-        if "@ublc.edu.ph" not in email:
-            return render_template('signup.html', error="Registration requires a valid @ublc.edu.ph email address.")
         
         try:
             user_ref = db.collection('students').document(email)
@@ -363,23 +368,59 @@ def chat():
     if not user_message:
         return jsonify({"answer": "Please provide a message."})
     
+    student_email = session.get('username')
+    
+    # Check for an existing log session ID or create a new one
+    # We use a session ID to group all messages from one conversation together
+    log_session_id = session.get('chat_log_id')
+    
+    # Retrieve current history from session
     history = session.get('history', [])
+    
+    # 1. Prepare message payload for OpenAI
     messages = [{"role": "system", "content": SYSTEM_PROMPT}]
     messages.extend(history)
     messages.append({"role": "user", "content": user_message})
     
     try:
+        # 2. Call OpenAI API
         completion = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=messages
         )
         ai_response = completion.choices[0].message.content
-        history.append({"role": "user", "content": user_message})
-        history.append({"role": "assistant", "content": ai_response})
+        
+        # 3. Update history for the current session
+        user_msg_log = {"role": "user", "content": user_message, "timestamp": datetime.now()}
+        ai_msg_log = {"role": "assistant", "content": ai_response, "timestamp": datetime.now()}
+        
+        history.append(user_msg_log)
+        history.append(ai_msg_log)
+        
+        # 4. Save updated history to Flask session
         session['history'] = history
+        
+        # 5. Save/Update Log in Firestore
+        if db:
+            log_data = {
+                'user_email': student_email,
+                'timestamp': firestore.SERVER_TIMESTAMP, # Timestamp of the last activity
+                'messages': history # Store the full history array
+            }
+
+            if not log_session_id:
+                # First message of a new session: create a new document
+                doc_ref = db.collection('chat_logs').document()
+                doc_ref.set(log_data)
+                session['chat_log_id'] = doc_ref.id # Store the new ID in the session
+            else:
+                # Subsequent message: update the existing document
+                db.collection('chat_logs').document(log_session_id).update(log_data)
+        
         return jsonify({"answer": ai_response})
+        
     except Exception as e:
-        app.logger.error(f"OpenAI API Error: {e}")
+        app.logger.error(f"OpenAI API or Firestore Log Error: {e}")
         return jsonify({"answer": "An error occurred while connecting to the AI. Please try again later."}), 500
 
 # ----------------------------------------------------------------------------------
@@ -605,4 +646,5 @@ def track_report_status(report_id=None):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.getenv("PORT", "5001"))
+    app.run(debug=True, port=port)

@@ -3,348 +3,330 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UBLC Campus Security AI Assistant</title>
+    <title>UBLC Campus Security Assistant</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root {
-            --bg: radial-gradient(circle at 20% 20%, #eef1ff 0%, #f4f7ff 40%, #f7f9ff 100%);
-            --card: #ffffff;
-            --primary: #4935ff;
-            --primary-hover: #3c2bd6;
-            --text-main: #1f2a3d;
+            --bg: linear-gradient(180deg, #eef2ff 0%, #f3f5ff 35%, #f7f9ff 100%);
+            --surface: rgba(255, 255, 255, 0.78);
+            --primary: #7b6cff;
+            --primary-hover: #6a5bf2;
+            --text-main: #1f2937;
             --text-sub: #6b7280;
-            --stroke: #e5e7eb;
-            --bubble-user: #e9e8ff;
-            --bubble-bot: #ffffff;
+            --border: #e5e7eb;
+            --input-bg: #f9fafb;
         }
         * { box-sizing: border-box; }
         body {
             margin: 0;
             min-height: 100vh;
-            background: var(--bg);
             font-family: 'Inter', sans-serif;
+            background: var(--bg);
             color: var(--text-main);
             display: flex;
+            flex-direction: column;
         }
-        .page {
-            width: 100%;
+        .shell {
             display: flex;
             flex-direction: column;
             min-height: 100vh;
         }
-        .topbar {
+        header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 14px 28px;
-            background: #fff;
-            border-bottom: 1px solid var(--stroke);
+            padding: 16px 28px;
+            background: var(--surface);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #eef0f6;
         }
         .brand {
             display: flex;
             align-items: center;
             gap: 12px;
         }
-        .logo-badge {
-            height: 42px;
-            width: 42px;
+        .brand .logo {
+            width: 40px;
+            height: 40px;
             border-radius: 12px;
-            background: linear-gradient(135deg, #5c51ff, #6f6bff);
+            background: #eef2ff;
             display: grid;
             place-items: center;
-            color: #fff;
+            color: var(--primary);
+            font-size: 18px;
+            font-weight: 700;
         }
-        .brand-text { display: flex; flex-direction: column; line-height: 1.25; }
-        .brand-title { font-weight: 700; font-size: 16px; }
-        .brand-sub { font-size: 13px; color: var(--text-sub); }
-        .top-actions {
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
+        }
+        .brand-text .title { font-weight: 700; font-size: 17px; margin: 0; }
+        .brand-text .subtitle { font-size: 12px; color: var(--text-sub); margin: 2px 0 0; }
+        .user-actions {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 16px;
             font-size: 14px;
             color: var(--text-sub);
         }
-        .logout-link {
+        .user-actions a {
+            text-decoration: none;
+            color: #4b5563;
+            font-weight: 600;
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: 8px 10px;
+            padding: 8px 12px;
             border-radius: 10px;
-            background: #f4f5ff;
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 600;
-            transition: background 0.2s;
+            border: 1px solid transparent;
+            transition: all 0.2s;
         }
-        .logout-link:hover { background: #e7e9ff; }
-        .chat-shell {
+        .user-actions a:hover { color: var(--primary); border-color: #e5e7eb; background: #f6f7ff; }
+        .main {
             flex: 1;
-            padding: 28px;
             display: flex;
+            flex-direction: column;
+            padding: 24px 26px 20px;
+            gap: 12px;
         }
-        .chat-card {
-            width: 100%;
-            background: var(--card);
-            border: 1px solid rgba(0,0,0,0.02);
-            box-shadow: 0 18px 50px rgba(77, 91, 128, 0.12);
+        .chat-panel {
+            flex: 1;
+            background: var(--surface);
+            border: 1px solid #edf1ff;
             border-radius: 18px;
+            padding: 14px 18px;
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            box-shadow: 0 20px 60px rgba(125, 135, 182, 0.18);
         }
-        .chat-box {
+        .chat-body {
             flex: 1;
             overflow-y: auto;
-            padding: 24px;
-            background: transparent;
+            padding: 10px 8px 2px;
         }
-        .message {
+        .message-row {
             display: flex;
-            margin-bottom: 16px;
-            gap: 10px;
+            margin-bottom: 12px;
         }
-        .bot-message { justify-content: flex-start; }
-        .user-message { justify-content: flex-end; }
-        .avatar {
-            height: 30px;
-            width: 30px;
-            border-radius: 8px;
-            background: #f1f1ff;
+        .message-row.user { justify-content: flex-end; }
+        .bubble {
+            display: inline-flex;
+            align-items: flex-start;
+            gap: 10px;
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 12px 14px;
+            border: 1px solid #eef0f6;
+            box-shadow: 0 6px 24px rgba(0,0,0,0.04);
+            max-width: 720px;
+        }
+        .bubble.user {
+            background: linear-gradient(135deg, #7b6cff, #9a8cff);
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 8px 28px rgba(123, 108, 255, 0.25);
+        }
+        .bubble.user .content { color: #fff; }
+        .bubble.user .meta { color: rgba(255,255,255,0.78); }
+        .bubble .avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            background: #eef2ff;
             display: grid;
             place-items: center;
-            color: #4935ff;
+            color: var(--primary);
+            font-weight: 700;
             flex-shrink: 0;
         }
-        .message-bubble {
-            max-width: 70%;
-            padding: 12px 16px;
-            border-radius: 12px;
-            border: 1px solid rgba(0,0,0,0.03);
-            background: var(--bubble-bot);
-            color: var(--text-main);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
-            line-height: 1.5;
-            white-space: pre-wrap;
+        .bubble.user .avatar {
+            background: rgba(255,255,255,0.18);
+            color: #fff;
         }
-        .user-message .message-bubble {
-            background: var(--bubble-user);
-            border-color: rgba(73,53,255,0.15);
+        .bubble .content {
+            font-size: 14px;
+            color: #1f2937;
+            line-height: 1.55;
         }
-        .input-area {
-            border-top: 1px solid var(--stroke);
-            padding: 18px 18px 20px;
-            background: #fff;
+        .bubble .meta {
+            font-size: 12px;
+            color: var(--text-sub);
+            margin-top: 6px;
+        }
+        .composer {
             display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .quick-actions { display: flex; justify-content: flex-start; }
-        .report-button {
-            background: #fde68a;
-            color: #854d0e;
-            border: none;
-            padding: 10px 14px;
-            border-radius: 10px;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
-            transition: transform 0.1s, background 0.2s;
-            text-decoration: none;
-            display: inline-flex;
             align-items: center;
-            gap: 8px;
-        }
-        .report-button:hover { background: #fcd34d; }
-        .report-button:active { transform: translateY(1px); }
-        .input-row {
-            display: flex;
             gap: 10px;
-            align-items: center;
+            padding: 12px 0 4px;
+            border-top: 1px solid #edf1ff;
+            margin-top: 6px;
         }
-        .input-row input {
+        .composer input {
             flex: 1;
             padding: 14px 14px;
-            border: 1px solid var(--stroke);
             border-radius: 12px;
+            border: 1px solid var(--border);
+            background: var(--input-bg);
             font-size: 14px;
-            background: #f7f7fb;
             outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
-        .input-row input:focus {
+        .composer input:focus {
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(73,53,255,0.12);
+            box-shadow: 0 0 0 3px rgba(123, 108, 255, 0.15);
             background: #fff;
         }
-        .send-btn {
+        .composer button {
             border: none;
             background: var(--primary);
             color: #fff;
             font-weight: 700;
-            padding: 14px 18px;
             border-radius: 12px;
+            padding: 12px 18px;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             gap: 8px;
             transition: background 0.2s, transform 0.1s;
         }
-        .send-btn:hover { background: var(--primary-hover); }
-        .send-btn:active { transform: translateY(1px); }
+        .composer button:hover { background: var(--primary-hover); }
+        .composer button:active { transform: translateY(1px); }
+        .report-link {
+            align-self: flex-start;
+            margin-bottom: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            color: var(--primary);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .report-link:hover { color: var(--primary-hover); }
+        @media (max-width: 768px) {
+            header { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .user-actions { width: 100%; flex-wrap: wrap; justify-content: flex-start; }
+            .chat-panel { padding: 12px; }
+        }
     </style>
 </head>
 <body>
-    <div class="page">
-        <div class="topbar">
-            <div class="brand">
-                <div class="logo-badge" aria-hidden="true">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M5 18.5 5.6 15A2 2 0 0 0 7.58 13.35L8 13h8a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9.5c0 .39.39.66.75.5l.25-.11Z" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M9 9h6m-6 3h3" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
-                    </svg>
-                </div>
-                <div class="brand-text">
-                    <span class="brand-title">AI Chatbot</span>
-                    <span class="brand-sub">Always here to help</span>
-                </div>
-            </div>
-            <div class="top-actions">
-                <span>Welcome, {{ session.get('username', 'Guest') }}</span>
-                <a href="/logout" class="logout-link">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M9 6V4.5A1.5 1.5 0 0 1 10.5 3h7A1.5 1.5 0 0 1 19 4.5v15A1.5 1.5 0 0 1 17.5 21h-7A1.5 1.5 0 0 1 9 19.5V18" stroke="#4935ff" stroke-width="1.6" stroke-linecap="round"/>
-                        <path d="M15 12H5m0 0 2.5-2.5M5 12l2.5 2.5" stroke="#4935ff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                    Logout
-                </a>
+<div class="shell">
+    <header>
+        <div class="brand">
+            <div class="logo"><i class="fas fa-comments"></i></div>
+            <div class="brand-text">
+                <span class="title">AI Chatbot</span>
+                <span class="subtitle">Always here to help</span>
             </div>
         </div>
+        <div class="user-actions">
+            <span>Welcome, {{ session.get('username') }}</span>
+            <a href="{{ url_for('report_form') }}"><i class="fas fa-exclamation-triangle"></i> Submit Report</a>
+            <a href="{{ url_for('student_inbox') }}"><i class="fas fa-inbox"></i> Inbox</a>
+            <a href="{{ url_for('student_profile') }}"><i class="fas fa-user"></i> Profile</a>
+            <a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </header>
 
-        <div class="chat-shell">
-            <div class="chat-card">
-                <div class="chat-box" id="chatBox">
-                    <div class="message bot-message">
-                        <div class="avatar">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M5 18.5 5.6 15A2 2 0 0 0 7.58 13.35L8 13h8a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9.5c0 .39.39.66.75.5l.25-.11Z" stroke="#4935ff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M9 9h6m-6 3h3" stroke="#4935ff" stroke-width="1.6" stroke-linecap="round"/>
-                            </svg>
-                        </div>
-                        <div class="message-bubble">
-                            Hello {{ session.get('username', 'there') }}! I'm your AI assistant. How can I help you today?
+    <main class="main">
+        <div class="chat-panel">
+            <div id="chat-box" class="chat-body">
+                <div class="message-row ai">
+                    <div class="bubble ai">
+                        <div class="avatar"><i class="fas fa-robot"></i></div>
+                        <div class="content">
+                            <div>Hello! I am your AI assistant. How can I help you today?</div>
+                            <div class="meta">Now</div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="input-area">
-                    <div class="quick-actions">
-                        <a href="/report_form" class="report-button">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M12 5v14m-7-7h14" stroke="#854d0e" stroke-width="1.8" stroke-linecap="round"/>
-                            </svg>
-                            Submit New Incident Report
-                        </a>
-                    </div>
-                    <div class="input-row">
-                        <input type="text" id="userInput" placeholder="Type your message..." />
-                        <button class="send-btn" onclick="sendMessage()">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M4 12h6m0 0L5.5 6.5M10 12 5.5 17.5" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M12 5.343a1 1 0 0 1 1.296-.954l6.853 2.284a1 1 0 0 1 .1 1.87l-17 8.084a1 1 0 0 1-1.334-1.234l2.174-7.1" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
-                            </svg>
-                            Send
-                        </button>
-                    </div>
-                </div>
+            <div class="composer">
+                <input type="text" id="user-input" placeholder="Type your message..." onkeypress="if(event.keyCode==13) sendMessage()">
+                <button type="button" onclick="sendMessage()">
+                    <i class="fas fa-paper-plane"></i> Send
+                </button>
             </div>
         </div>
-    </div>
+    </main>
+</div>
 
-    <script>
-        const chatBox = document.getElementById('chatBox');
-        const userInput = document.getElementById('userInput');
+<script>
 
-        function createAvatar() {
-            const avatar = document.createElement('div');
-            avatar.className = 'avatar';
-            avatar.innerHTML = `
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M5 18.5 5.6 15A2 2 0 0 0 7.58 13.35L8 13h8a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9.5c0 .39.39.66.75.5l.25-.11Z" stroke="#4935ff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M9 9h6m-6 3h3" stroke="#4935ff" stroke-width="1.6" stroke-linecap="round"/>
-                </svg>
-            `;
-            return avatar;
-        }
 
-        function appendMessage(role, text) {
-            const wrapper = document.createElement('div');
-            wrapper.className = `message ${role === 'bot' ? 'bot-message' : 'user-message'}`;
 
-            if (role === 'bot') {
-                wrapper.appendChild(createAvatar());
-            }
+    function appendBubble(text, role) {
+        const chatBox = document.getElementById('chat-box');
+        const row = document.createElement('div');
+        row.className = `message-row ${role}`;
 
-            const bubble = document.createElement('div');
-            bubble.className = 'message-bubble';
-            bubble.textContent = text;
-            wrapper.appendChild(bubble);
+        const wrapper = document.createElement('div');
+        wrapper.className = `bubble ${role}`;
 
-            chatBox.appendChild(wrapper);
-            chatBox.scrollTop = chatBox.scrollHeight;
-        }
+        const avatar = document.createElement('div');
+        avatar.className = 'avatar';
+        avatar.innerHTML = role === 'user' ? '<i class="fas fa-user"></i>' : '<i class="fas fa-robot"></i>';
 
-        function addTyping() {
-            const typing = document.createElement('div');
-            typing.id = 'typing-indicator';
-            typing.className = 'message bot-message';
-            typing.appendChild(createAvatar());
+        const content = document.createElement('div');
+        content.className = 'content';
+        const body = document.createElement('div');
+        body.textContent = text;
+        const meta = document.createElement('div');
+        meta.className = 'meta';
+        meta.textContent = 'Now';
 
-            const bubble = document.createElement('div');
-            bubble.className = 'message-bubble';
-            bubble.textContent = '...typing...';
-            typing.appendChild(bubble);
+        content.appendChild(body);
+        content.appendChild(meta);
+        wrapper.appendChild(avatar);
+        wrapper.appendChild(content);
+        row.appendChild(wrapper);
+        chatBox.appendChild(row);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
 
-            chatBox.appendChild(typing);
-            chatBox.scrollTop = chatBox.scrollHeight;
-        }
+  
 
-        function removeTyping() {
-            const indicator = document.getElementById('typing-indicator');
-            if (indicator) indicator.remove();
-        }
+    function sendMessage() {
+        const inputElement = document.getElementById('user-input');
+        const message = inputElement.value.trim();
+        if (!message) return;
 
-        function sendMessage() {
-            const message = userInput.value.trim();
-            if (!message) return;
+        appendBubble(message, 'user');
+        inputElement.value = '';
 
-            appendMessage('user', message);
-            userInput.value = '';
-            addTyping();
+        // typing placeholder
+        const chatBox = document.getElementById('chat-box');
+        const typingRow = document.createElement('div');
+        typingRow.className = 'message-row ai';
+        const typing = document.createElement('div');
+        typing.className = 'bubble ai';
+        typing.id = 'typing-indicator';
+        typing.innerHTML = '<div class="avatar"><i class="fas fa-robot"></i></div><div class="content"><div>...typing...</div><div class="meta">Now</div></div>';
+        typingRow.appendChild(typing);
+        chatBox.appendChild(typingRow);
+        chatBox.scrollTop = chatBox.scrollHeight;
 
-            fetch('/chat', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message })
-            })
-            .then(response => response.json())
-            .then(data => {
-                removeTyping();
-                appendMessage('bot', data.answer || 'No response received.');
-            })
-            .catch(err => {
-                console.error(err);
-                removeTyping();
-                appendMessage('bot', 'Sorry, the connection failed. Please try again later.');
-            });
-        }
-
-        userInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                sendMessage();
-            }
+        fetch('/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message })
+        })
+        .then(res => res.json())
+        .then(data => {
+            const t = document.getElementById('typing-indicator');
+            if (t) t.remove();
+            appendBubble(data.answer, 'ai');
+        })
+        .catch(() => {
+            const t = document.getElementById('typing-indicator');
+            if (t) t.remove();
+            appendBubble('Sorry, the connection failed. Please try again later.', 'ai');
         });
-    </script>
+    }
+</script>
 </body>
 </html>
-

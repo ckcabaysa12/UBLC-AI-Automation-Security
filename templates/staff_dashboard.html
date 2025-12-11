@@ -6,33 +6,188 @@
     <title>Staff Dashboard | UBLC Security</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #f4f6f9; }
-        .dashboard-container { margin-top: 30px; }
-        .card-header { border-bottom: 1px solid #e3e6f0; }
-        .card-body { padding: 1.25rem; }
-        .kpi-card { border-left: 0.25rem solid; }
-        .border-primary { border-color: #4e73df !important; }
-        .border-success { border-color: #1cc88a !important; }
-        .border-info { border-color: #36b9cc !important; }
-        /* Table Status Styling */
-        .status-badge { font-size: 0.8em; padding: 0.4em 0.8em; border-radius: 0.25rem; font-weight: bold; }
-        .bg-new { background-color: #e74a3b; color: white; }
-        .bg-in-progress { background-color: #f6c23e; color: black; }
-        .bg-resolved { background-color: #1cc88a; color: white; }
-        .bg-closed { background-color: #36b9cc; color: white; }
+        :root {
+            --bg: linear-gradient(180deg, #eef2ff 0%, #f3f5ff 35%, #f7f9ff 100%);
+            --surface: rgba(255, 255, 255, 0.9);
+            --surface-strong: #ffffff;
+            --primary: #7b6cff;
+            --primary-2: #6a5bf2;
+            --accent-1: #0ea5e9;
+            --accent-2: #10b981;
+            --accent-3: #f59e0b;
+            --text-main: #1f2937;
+            --text-sub: #6b7280;
+            --border: #e5e7eb;
+            --shadow: 0 20px 60px rgba(125, 135, 182, 0.18);
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text-main);
+        }
+        .dashboard-container { margin-top: 24px; }
+        .page-shell {
+            background: var(--surface);
+            border-radius: 18px;
+            box-shadow: var(--shadow);
+            padding: 24px 24px 30px;
+            border: 1px solid #eef0f6;
+        }
+        .header-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 14px 18px;
+            background: var(--surface-strong);
+            border: 1px solid #eef0f6;
+            border-radius: 16px;
+            box-shadow: 0 12px 32px rgba(125, 135, 182, 0.12);
+        }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .brand .logo {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: #eef2ff;
+            display: grid;
+            place-items: center;
+            color: var(--primary);
+            font-size: 18px;
+            font-weight: 700;
+        }
+        .brand-text { line-height: 1.2; }
+        .brand-text .title { font-weight: 700; margin: 0; }
+        .brand-text .subtitle { font-size: 12px; color: var(--text-sub); margin: 2px 0 0; }
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .pill {
+            background: #f4f6ff;
+            color: var(--primary);
+            border-radius: 999px;
+            padding: 8px 12px;
+            border: 1px solid #e5e7eb;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+        .btn-ghost {
+            border: 1px solid #e5e7eb;
+            background: #fff;
+            border-radius: 10px;
+            padding: 8px 12px;
+            color: var(--text-main);
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-ghost:hover { border-color: var(--primary); color: var(--primary); }
+        .eyebrow {
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            font-size: 0.75rem;
+            color: var(--text-sub);
+            margin-bottom: 6px;
+        }
+        .card {
+            border: none;
+            border-radius: 16px;
+            overflow: hidden;
+            background: var(--surface-strong);
+            box-shadow: 0 12px 30px rgba(125, 135, 182, 0.12);
+        }
+        .card-header {
+            background: var(--surface-strong);
+            border-bottom: 1px solid #edf1ff;
+        }
+        .kpi-card {
+            border-left: 0.24rem solid;
+            border-radius: 14px;
+            background: linear-gradient(145deg, #ffffff 0%, #f7f9ff 100%);
+        }
+        .border-primary { border-color: var(--primary) !important; }
+        .border-success { border-color: var(--accent-1) !important; }
+        .border-info { border-color: var(--accent-2) !important; }
+        .border-warning { border-color: var(--accent-3) !important; }
+        .metric-label { letter-spacing: .08em; color: var(--text-sub); }
+        .status-badge {
+            font-size: 0.78em;
+            padding: 0.35em 0.75em;
+            border-radius: 999px;
+            font-weight: 700;
+            border: 1px solid transparent;
+        }
+        .bg-new { background-color: #ef4444; color: #fff; }
+        .bg-in-progress { background-color: #f59e0b; color: #1f2937; }
+        .bg-resolved { background-color: #10b981; color: #fff; }
+        .bg-closed { background-color: #6366f1; color: #fff; }
+        .bg-secondary { background-color: #94a3b8; color: #0f172a; }
+        .legend-badges .status-badge { margin-right: 6px; }
+        .filters {
+            background: #f7f8ff;
+            color: var(--text-main);
+            padding: 14px;
+            border-radius: 14px;
+            border: 1px solid #e5e7eb;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 10px;
+        }
+        .filters input,
+        .filters select {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            color: var(--text-main);
+        }
+        .table thead {
+            background: #f4f6ff;
+            color: var(--text-main);
+        }
+        .table tbody tr { vertical-align: middle; }
+        .table-hover tbody tr:hover { background: #eef2ff; }
+        .btn-soft {
+            background: #eef2ff;
+            color: #312e81;
+            border: none;
+        }
+        .btn-soft:hover { background: #e0e7ff; color: #1e1b4b; }
     </style>
 </head>
 <body>
 
 <div class="dashboard-container container-fluid">
-
-    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
-        <h1 class="h3 mb-0 text-gray-800"><i class="fas fa-tachometer-alt"></i> Security Staff Dashboard</h1>
-        <a href="{{ url_for('logout') }}" class="btn btn-danger btn-sm">
-            <i class="fas fa-sign-out-alt"></i> Logout ({{ session.get('username') }})
-        </a>
+    <div class="header-bar mb-4">
+        <div class="brand">
+            <div class="logo"><i class="fas fa-shield-alt"></i></div>
+            <div class="brand-text">
+                <span class="title">Security Staff Dashboard</span>
+                <span class="subtitle">Monitor, triage, and close incidents</span>
+            </div>
+        </div>
+        <div class="user-actions">
+            <div class="pill">
+                <i class="fas fa-user-shield"></i>
+                <span>{{ session.get('username') }}</span>
+            </div>
+            <a class="btn-ghost" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
     </div>
+    <div class="page-shell">
 
     {% if error %}
     <div class="alert alert-danger" role="alert">
@@ -42,16 +197,18 @@
 
     <div class="row">
         <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card kpi-card border-left-primary shadow h-100 py-2 border-primary">
+            <div class="card kpi-card border-left-primary shadow-sm h-100 py-2 border-primary">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col me-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1 metric-label">
                                 Total Incidents (All Time)</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_reports }}</div>
+                            <div class="h4 mb-0 fw-bold text-dark">{{ total_reports }}</div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                            <div class="control-pill">
+                                <i class="fas fa-clipboard-list"></i>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -59,16 +216,18 @@
         </div>
 
         <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card kpi-card border-left-warning shadow h-100 py-2 border-warning">
+            <div class="card kpi-card border-left-warning shadow-sm h-100 py-2 border-warning">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col me-2">
-                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1 metric-label">
                                 Active Reports (New & In Progress)</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ active_reports }}</div>
+                            <div class="h4 mb-0 fw-bold text-dark">{{ active_reports }}</div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-sync-alt fa-2x text-gray-300"></i>
+                            <div class="control-pill">
+                                <i class="fas fa-sync-alt"></i>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -76,16 +235,18 @@
         </div>
 
         <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card kpi-card border-left-success shadow h-100 py-2 border-success">
+            <div class="card kpi-card border-left-success shadow-sm h-100 py-2 border-success">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col me-2">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1 metric-label">
                                 Reports This Week</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ analytics.reports_this_week }}</div>
+                            <div class="h4 mb-0 fw-bold text-dark">{{ analytics.reports_this_week }}</div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-calendar-check fa-2x text-gray-300"></i>
+                            <div class="control-pill">
+                                <i class="fas fa-calendar-check"></i>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -93,16 +254,18 @@
         </div>
 
         <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card kpi-card border-left-info shadow h-100 py-2 border-info">
+            <div class="card kpi-card border-left-info shadow-sm h-100 py-2 border-info">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col me-2">
-                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1 metric-label">
                                 Resolution Rate (Closed/Resolved)</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ analytics.resolution_rate }}</div>
+                            <div class="h4 mb-0 fw-bold text-dark">{{ analytics.resolution_rate }}</div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-percent fa-2x text-gray-300"></i>
+                            <div class="control-pill">
+                                <i class="fas fa-percent"></i>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -110,12 +273,45 @@
         </div>
     </div>
 
-    <hr>
+    <div class="d-flex align-items-center justify-content-between mb-3">
+        <div>
+            <div class="eyebrow mb-1">Status Legend</div>
+            <div class="legend-badges">
+                <span class="status-badge bg-new">New</span>
+                <span class="status-badge bg-in-progress">In Progress</span>
+                <span class="status-badge bg-resolved">Resolved</span>
+                <span class="status-badge bg-closed">Closed</span>
+                <span class="status-badge bg-secondary">Other</span>
+            </div>
+        </div>
+        <div class="text-end">
+            <div class="eyebrow mb-1">Live Filters</div>
+            <div class="filters">
+                <div>
+                    <label for="reportSearch" class="form-label mb-1">Search</label>
+                    <input id="reportSearch" type="text" class="form-control form-control-sm" placeholder="Search ID, type, or location">
+                </div>
+                <div>
+                    <label for="statusFilter" class="form-label mb-1">Status</label>
+                    <select id="statusFilter" class="form-select form-select-sm">
+                        <option value="">All statuses</option>
+                        <option value="New">New</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Resolved">Resolved</option>
+                        <option value="Closed">Closed</option>
+                    </select>
+                </div>
+                <div class="d-flex align-items-end">
+                    <button id="clearFilters" class="btn btn-soft btn-sm w-100"><i class="fas fa-undo me-1"></i>Reset</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="row">
         
         <div class="col-xl-6 col-lg-6">
-            <div class="card shadow mb-4">
+            <div class="card shadow-sm mb-4">
                 <div class="card-header py-3">
                     <h6 class="m-0 font-weight-bold text-primary">Incident Type Breakdown</h6>
                 </div>
@@ -128,7 +324,7 @@
         </div>
 
         <div class="col-xl-6 col-lg-6">
-            <div class="card shadow mb-4">
+            <div class="card shadow-sm mb-4">
                 <div class="card-header py-3">
                     <h6 class="m-0 font-weight-bold text-primary">Incident Volume Timeline</h6>
                 </div>
@@ -145,10 +341,16 @@
 
     <div class="row">
         <div class="col-12">
-            <div class="card shadow mb-4">
+            <div class="card shadow-sm mb-4">
                 <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="eyebrow mb-1">Incident Queue</div>
                     <h6 class="m-0 font-weight-bold text-primary">All Incident Reports</h6>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
                     <span class="badge bg-secondary">Total: {{ total_reports }}</span>
+                        <span class="badge bg-success">Active: {{ active_reports }}</span>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -163,7 +365,7 @@
                                     <th>Actions</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="reports-body">
                                 {% for report in reports %}
                                 <tr id="report-row-{{ report.id }}">
                                     <td>{{ report.id }}</td>
@@ -201,6 +403,7 @@
                             </tbody>
                         </table>
                     </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -233,7 +436,8 @@
 
 <script>
     // --- 1. Load Data from Flask/Jinja ---
-    const analyticsData = {{ analytics | tojson }};
+    // Wrap in JSON.parse so the raw Jinja output is treated as a string at parse time
+    const analyticsData = JSON.parse('{{ analytics | tojson | safe }}');
 
     // Data for Breakdown Chart (Bar Chart)
     const breakdownLabels = analyticsData.breakdown.labels;
@@ -244,10 +448,10 @@
     const timelineVolumes = analyticsData.timeline.volumes;
 
     // --- 2. Define Chart Colors ---
-    const primaryColor = 'rgb(28, 200, 138)'; 
-    const secondaryColor = 'rgb(52, 144, 220)'; 
-    const warningColor = 'rgb(246, 194, 62)'; 
-    const dangerColor = 'rgb(231, 74, 59)'; 
+    const primaryColor = 'rgb(79, 70, 229)'; 
+    const secondaryColor = 'rgb(14, 165, 233)'; 
+    const warningColor = 'rgb(245, 158, 11)'; 
+    const dangerColor = 'rgb(239, 68, 68)'; 
 
     // --- 3. Incident Type Breakdown Chart (Bar Chart) ---
     if (breakdownLabels && breakdownLabels.length > 0) {
@@ -318,6 +522,33 @@
 <script>
     // AJAX for viewing report details in modal
     $(document).ready(function() {
+        const $reportSearch = $('#reportSearch');
+        const $statusFilter = $('#statusFilter');
+        const $reportsBody = $('#reports-body');
+
+        // Lightweight client-side filtering for quick triage
+        function applyFilters() {
+            const query = $reportSearch.val().toLowerCase();
+            const status = $statusFilter.val();
+
+            $reportsBody.find('tr').each(function() {
+                const $row = $(this);
+                const rowText = $row.text().toLowerCase();
+                const statusText = $row.find('.status-badge').text();
+                const matchesQuery = !query || rowText.indexOf(query) !== -1;
+                const matchesStatus = !status || statusText === status;
+                $row.toggle(matchesQuery && matchesStatus);
+            });
+        }
+
+        $reportSearch.on('input', applyFilters);
+        $statusFilter.on('change', applyFilters);
+        $('#clearFilters').on('click', function() {
+            $reportSearch.val('');
+            $statusFilter.val('');
+            applyFilters();
+        });
+
         $('.view-report').on('click', function() {
             var reportId = $(this).data('id');
             $('#modal-report-details').html('<p>Loading report details...</p>'); // Loading indicator
@@ -378,6 +609,8 @@
                     // Optional: Provide visual feedback (e.g., flash the row)
                     $row.css('background-color', '#ffffcc');
                     setTimeout(() => $row.css('background-color', ''), 500); 
+                    
+                    applyFilters(); // keep filters respected after update
                     
                     // console.log(response.message);
                 },
